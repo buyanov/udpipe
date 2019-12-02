@@ -1,0 +1,42 @@
+# config/services.yml
+parameters:
+    clickhouse.host: "%env(DATABASE_HOST)%"
+    clickhouse.port: "%env(int:DATABASE_PORT)%"
+    clickhouse.username: "%env(DATABASE_USER)%"
+    clickhouse.password: "%env(DATABASE_PASS)%"
+    clickhouse.database: "%env(DATABASE_NAME)%"
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: true
+
+    App\:
+        resource: '../app/*'
+        exclude: '../app/{DependencyInjection,Command}'
+
+    Symfony\Component\Console\Application:
+        # why public? so we can get it from container in bin file
+        # via "$container->get(Application::class)"
+        public: true
+
+    App\Service\Server:
+        public: true
+
+    Symfony\Component\DependencyInjection\ParameterBag\ParameterBag:
+        arguments:
+            - host: '%clickhouse.host%'
+              port: '%clickhouse.port%'
+              username: '%clickhouse.username%'
+              password: '%clickhouse.password%'
+              database: '%clickhouse.database%'
+        public: true
+
+    clickhouse:
+        class: App\Service\ClickHouseClient
+        bind:
+            $params: '@Symfony\Component\DependencyInjection\ParameterBag\ParameterBag'
+        public: true
+
+    App\Service\ClickHouseClient: '@clickhouse'
