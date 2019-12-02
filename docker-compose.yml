@@ -1,0 +1,36 @@
+version: '3.3'
+
+services:
+  clickhouse:
+    image: yandex/clickhouse-server
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    volumes:
+      - ./access_log.sql:/docker-entrypoint-initdb.d/access_log.sql
+    restart: always
+
+  udpipe:
+    depends_on:
+      - clickhouse
+    build: .
+    ports:
+      - "2514:2514/udp"
+    restart: always
+    environment:
+      DATABASE_PORT: 8123
+      DATABASE_USER: "default"
+      DATABASE_NAME: "default"
+      DATABASE_PASS: ""
+      DATABASE_HOST: clickhouse
+
+  web:
+    image: nginx
+    depends_on:
+      - udpipe
+    ports:
+      - "8080:80"
+    volumes:
+      - ./www:/var/www/html
+      - ./etc/nginx.conf:/etc/nginx/nginx.conf
+    restart: always
