@@ -30,7 +30,9 @@ echo '@@{"time_local":"01/Dec/2019:06:43:11 +0000","remote_addr":"172.17.0.1","r
 можно просто запустить все сервисы разом docker-compose
 
 ```bash
+composer i
+
 docker-compose up
 
-docker-composer down
+docker-compose down
 ```
