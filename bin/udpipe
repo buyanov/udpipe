@@ -1,0 +1,50 @@
+#!/usr/bin/env php
+<?php
+declare(ticks = 1);
+
+if (PHP_SAPI !== 'cli') {
+    exit;
+}
+
+use Symfony\Component\Console\Application;
+use Symfony\Component\ErrorHandler\Debug;
+
+require_once __DIR__ . '/autoload.php';
+
+//gc_disable();
+
+if (!isset($_SERVER['APP_ENV'])) {
+    if (!class_exists(\Symfony\Component\Dotenv\Dotenv::class)) {
+        throw new \RuntimeException('APP_ENV environment variable is not defined. You need to define environment variables for configuration or add "symfony/dotenv" as a Composer dependency to load variables from a .env file.');
+    }
+    (new \Symfony\Component\Dotenv\Dotenv())->load(__DIR__.'/../.env');
+}
+
+
+$env = $_SERVER['APP_ENV'] ?? 'prod';
+$debug = (bool) ($_SERVER['APP_DEBUG'] ?? ('prod' !== $env));
+
+
+if ($debug) {
+    umask(0000);
+    Debug::enable();
+}
+
+try {
+    /**
+     * @var \Symfony\Component\DependencyInjection\Container $container
+     */
+    $container = require __DIR__ . '/container.php';
+
+    $application = $container->get(Application::class);
+
+    $application->setName('udpipe');
+    $application->setVersion('@package_version@');
+
+    exit($application->run());
+
+} catch (Throwable $throwable) {
+
+    echo $throwable->getMessage();
+    exit($throwable->getCode());
+}

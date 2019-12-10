@@ -30,12 +30,6 @@ class Server extends AbstractServer
         $this->release();
     }
 
-    protected function getConnectionStr(): string
-    {
-        return "udp://$this->host:$this->port";
-    }
-
-
     protected function loop(): Server
     {
         if (null === $this->loop) {

@@ -30,6 +30,11 @@ abstract class AbstractServer implements ServerInterface
         return $this;
     }
 
+    protected function getConnectionStr(): string
+    {
+        return "udp://$this->host:$this->port";
+    }
+
     public function setHost(string $host): void
     {
         $this->host = $host;
