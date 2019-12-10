@@ -10,7 +10,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 abstract class Command extends SymfonyCommand
 {
-
     /**
      * @var $input Input
      */

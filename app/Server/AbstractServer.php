@@ -39,4 +39,10 @@ abstract class AbstractServer implements ServerInterface
     {
         $this->port = $port;
     }
+
+    public function getName()
+    {
+        return 'UDPIPE';
+    }
+
 }

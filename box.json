@@ -1,0 +1,31 @@
+{
+  "chmod": "0750",
+  "directories": [
+    "app"
+  ],
+  "files": [
+    "bin/autoload.php",
+    "bin/container.php",
+    ".env"
+  ],
+  "finder": [
+    {
+      "notName": "/LICENSE|.*\\.md|.*\\.dist|Makefile|composer\\.json|composer\\.lock/",
+      "exclude": [
+        "doc",
+        "test",
+        "test_old",
+        "tests",
+        "Tests",
+        "vendor-bin"
+      ],
+      "name": "*.php",
+      "in": "vendor"
+    }
+  ],
+  "git-version": "0.0.1",
+  "main": "bin/udpipe",
+  "output": "build/udpipe.phar",
+  "stub": true,
+  "compression": "GZ"
+}

@@ -3,11 +3,11 @@ namespace App\Console\Command;
 
 use App\Console\Command;
 use App\Service\Server;
+use Symfony\Component\Console\Command\LockableTrait;
 use Symfony\Component\Console\Input\InputArgument;
 
 class StartCommand extends Command
 {
-
     protected $name = 'server:start';
 
     protected $description = 'description';
@@ -33,12 +33,22 @@ class StartCommand extends Command
         $address = $this->input->getOption('address') ?? '0.0.0.0';
         $port = $this->input->getOption('port') ?? '2514';
 
-        $this->output->success(sprintf('Server listening on %s:%d', $address, $port));
-        $this->output->comment('Quit the server with CTRL-C.');
+        $pid = pcntl_fork();
 
-        $this->server
-            ->bind($address, $port)
-            ->listen();
+        if ($pid === -1) {
+            throw new \RuntimeException('Could not fork the process');
+        } elseif ($pid > 0) {
+            // we are the parent process
+            $this->output->success(sprintf('Server listening on %s:%d', $address, $port));
+            $this->output->comment('Quit the server with CTRL-C.');
+        } else {
+            file_put_contents(getcwd() . '/daemon.pid', posix_getpid());
+
+            $this->server
+                ->bind($address, $port)
+                ->listen();
+        }
     }
+
 
 }

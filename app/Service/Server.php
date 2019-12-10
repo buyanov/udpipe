@@ -6,18 +6,28 @@ use App\Server\AbstractServer;
 use React\EventLoop\LoopInterface;
 use React\Datagram\Socket;
 use React\Datagram\Factory;
+use Symfony\Component\Console\Command\LockableTrait;
 
 class Server extends AbstractServer
 {
+    use LockableTrait;
+
     /* @var $loop LoopInterface */
     protected $loop;
 
     public function listen(): void
     {
+        if (!$this->lock()) {
+            $this->logger->warning('The command is already running in another process.');
+            return;
+        }
+
         $this
             ->loop()
             ->server()
             ->run();
+
+        $this->release();
     }
 
     protected function getConnectionStr(): string
