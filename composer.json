@@ -4,6 +4,7 @@
     "php": "^7.2",
     "ext-json": "*",
     "ext-pcntl": "*",
+    "ext-posix": "*",
     "react/datagram": "^1.4",
     "react/socket": "^1.2",
     "smi2/phpclickhouse": "^1.3",
