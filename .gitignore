@@ -10,7 +10,6 @@
 /app/spool/*
 
 # Cache, session files and logs (Symfony3)
-/var/cache/*
 /var/logs/*
 /var/sessions/*
 !var/cache/.gitkeep
@@ -30,7 +29,6 @@
 /var/bootstrap.php.cache
 /bin/*
 !bin/console
-!bin/udpipe
 !bin/symfony_requirements
 /vendor/
 
@@ -156,9 +154,9 @@ fabric.properties
 .env
 /public/bundles/
 /var/
-/vendor/
 
 #box
 box.phar
-!/bin/autoload.php
-!/bin/container.php
+!bin/container.php
+!bin/autoload.php
+!bin/udpipe
