@@ -159,3 +159,6 @@ fabric.properties
 
 #box
 box.phar
+!bin/container.php
+!bin/autoload.php
+!bin/udpipe
